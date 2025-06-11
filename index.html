@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Sheptun Chat</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#212121">
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <script>
+      const RESET_STYLE = false; // Змінна для скидання стилів
+
+      // Додаємо лінк на стилі з таймштампом у вигляді параметра
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "styles.css?t=" + (!RESET_STYLE && Date.now()); // додає ?t=таймштамп
+      document.head.appendChild(link);
+    </script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <script defer src="push-notifications.js"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <span class="editable-nickname" id="user-alias">Guest</span>✎
+          <button id="backgroundButton" title="Set background image">🌠</button>
+          <input
+            type="file"
+            id="backgroundInput"
+            accept="image/*"
+            style="display: none"
+          />
+        </div>
+        <div class="chats-section">
+          <div class="section-title">Chats</div>
+          <div
+            class="chat-item active"
+            data-chat-type="common"
+            data-chat-id="common_room"
+          >
+            <div class="chat-name">Common room</div>
+          </div>
+        </div>
+        <div class="users-section">
+          <div class="section-title">Users online</div>
+          <div id="users-list">
+            <div class="user-item">
+              <div class="user-status"></div>
+              <div class="user-alias current-user">Guest</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-container" id="chat-container">
+        <div class="chat-header">
+          <button id="toggleSidebar">☰</button>
+          <span id="current-chat-name">
+            Hello, this is a free anonymous unencrypted chat without
+            restrictions for everyone
+          </span>
+        </div>
+        <div
+          class="chat-messages"
+          id="messages"
+          data-current-room="common_room"
+        >
+          <!-- Sample messages for demonstration -->
+          <div class="message-wrapper">
+            <div class="message-author bot">System</div>
+            <div class="message bot">Welcome to the chat! Start typing to send a message.</div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <button id="imageButton">+</button>
+          <input type="file" id="imageInput" accept="image/*" />
+          <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="Type your message..."
+          ></textarea>
+          <button id="sendButton">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="contextMenu" style="display: none">
+      <button class="context-edit">Edit</button>
+      <button class="context-copy">Copy</button>
+      <button class="context-delete">Delete</button>
+      <button class="context-quote">Quote</button>
+    </div>
+
+    <script defer src="socket.io.js"></script>
+    <script defer>
+      // Fix for mobile viewport height issues
+      function setViewportHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty(
+          "--app-height",
+          `${window.innerHeight}px`
+        );
+      }
+
+      // Set initial viewport height
+      setViewportHeight();
+
+      // Update on resize and orientation change
+      window.addEventListener("resize", setViewportHeight);
+      window.addEventListener("orientationchange", () => {
+        setTimeout(setViewportHeight, 100);
+      });
+
+      // Handle virtual keyboard on mobile
+      if ("visualViewport" in window) {
+        window.visualViewport.addEventListener("resize", () => {
+          const viewport = window.visualViewport;
+          document.documentElement.style.setProperty(
+            "--app-height",
+            `${viewport.height}px`
+          );
+        });
+      }
+    </script>
+    <!-- Just for test without cache -->
+    <script defer id="script"></script>
+    <script>
+      document.getElementById('script').src = `/script.js?t=${new Date().getTime()}`;
+    </script>
+    <!-- <script defer src="script.js"></script> -->
+</html>
